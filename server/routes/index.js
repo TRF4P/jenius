@@ -163,6 +163,17 @@ exports.getSchemaNodeRels = function(req, res){
           
 };
 
-
+exports.createSchemaRel = function(req, res){
+  var params = {};
+  params.srcId = req.body.srcId;
+  params.tgtId = req.body.tgtId;
+  params.relName = req.body.relName;
+  
+  query = "START srcNode = node({srcId}), tgtNode=node({tgtId})",
+          "CREATE (srcNode:Schema_Node)<-[:source_schema_rel]-(rel:Schema_Relationship{",
+          "relationship_name:{relName},",
+          "created_on:timestamp()",
+          "})-[:target_schema_rel]->(tgtNode:Schema_Node)".join('\n');
+};
 
 //exports.createSchemaProperty();
