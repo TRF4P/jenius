@@ -1,0 +1,18 @@
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="property in properties" ng-init="property.changedValue = property.propertyValue">
+			<td></td>
+			<td>
+				<div ng-if="property.changedValue!=property.propertyValue">
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

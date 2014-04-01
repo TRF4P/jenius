@@ -1,0 +1,52 @@
+<div class="container-fluid" ng-init="adminInit()" id="admin">
+<div class="row">
+  <div class="col-md-3 col-lg-3">
+      <hr>
+      <ul class="list-unstyled">
+        <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#userMenu">
+          <h5>Admin Controls <i class="glyphicon glyphicon-chevron-down"></i></h5>
+          </a>
+            <ul class="list-unstyled collapse in" id="userMenu">
+                <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-cog"></i> View Schema Nodes</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Create New Schema Node</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
+            </ul>
+        </li>
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h4>Select Schema Node</h4>
+        <select ui-select2 ng-model="selectedSchemaNode" ng-change="onNodeSelect()" data-placeholder="Pick a number">
+          <option value=""></option>
+          <option ng-repeat="schemaNode in schemaNodeList[0].nodeList" value="{{schemaNode}}">{{schemaNode.nodeLabel}}</option>
+      </select>
+          <button class="btn btn-primary pull-right" ng-if="selectedSchemaNode" ng-click="setPropertyFormValue()">Add New Property for {{selectedSchemaNode.nodeLabel}}</button>
+         <hr>
+         <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            
+            <div ng-if="schemaNodeProperties">
+              <div accordion>
+                <div accordion-group ng-repeat="schemaNodeProperties" heading="Static Header, initially expanded">
+                  Hi
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div ng-if="showPropertyForm" property-form schemanode="selectedSchemaNode" id="fank"></div>
+          </div>
+         </div>
+         <pre>{{schemaNode.nodeLabel}}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
