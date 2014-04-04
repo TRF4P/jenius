@@ -1,2 +1,13 @@
 <form>
+<select ng-model="srcNode">
+  <option ng-repeat="src in srcNodes" value="src.srcId">{{src.labelName}}</option>
+</select>
+<hr>
+<input type="text" ng-model="relType" placeholder="Provide relationship name"></input>
+<hr>
+<select ng-model="tgtNode">
+  <option ng-repeat="tgt in srcNodes" value="tgt.srcId">{{src.labelName}}</option>
+</select>
+<hr>
+<button class="btn bt-primary" ng-click="submitSchemaRelationship()">Submit Relationship!</button>
 </form>
