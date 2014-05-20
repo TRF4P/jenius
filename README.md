@@ -32,6 +32,6 @@ Schema Forms are designed to orchestrate how data should be inputted. Schema For
 ### Schema Reports
 Schema Reports operate by linking what relationships/properties to report on, and generating 
 
-# Future Goals
+## Future Goals
 * Data Curation Monitor (reviews for bad data, etc)
 * Freestyle data visualization explorer (based on the rules/data types/relationships that exist within the database)
