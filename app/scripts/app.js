@@ -19,8 +19,12 @@ angular.module('jeniusApp', [
                 templateUrl: 'views/snap.html',
                 controller: 'MainCtrl'
             })
+            .when('/graph', {
+                templateUrl: 'views/graph.html',
+                controller: 'MainCtrl'
+            })
             .when('/admin', {
-                templateUrl: 'views/admin.html',
+                templateUrl: 'modules/admin/admin.html',
                 controller: 'AdminCtrl'
             });
         //     .otherwise({

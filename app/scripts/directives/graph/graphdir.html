@@ -1,0 +1,25 @@
+<div id="rootGraph">
+	<div class="row">
+		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<p>Container Rules</p>
+				   <input ng-model="containerWidth" placeholder="Container width...">
+				   <input ng-model="containerHeight" placeholder="container height..">
+				   <button ng-click="setContainerSize()">Set Size</button>
+				   <hr>
+				   <p>Node Config</p>
+				  	<hr>
+				  	<p>Edge Config</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+			<div class="panel panel-default">
+				<div class="panel-body">
+				   <div id="cy" style="width: {{containerWidth}}; height: {{containerHeight}}"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
