@@ -1,0 +1,14 @@
+<form name="schemaNodeForm" id="jeniusList" novalidate>
+	<label>Schema Nodes</label>
+	    <div class="input-group">
+	    <span class="input-group-btn">
+	        <button class="btn btn-default" type="button" ng-click="refreshList()">refresh</button>
+	      </span>
+	      <select class="form-control" ng-model="jeniusList.selectedNode" ng-options="node.nodeName for node in jeniusList.nodeList" required>
+	      	<option value="">--- select node ---</option>
+	      </select>
+	      <span class="input-group-btn">
+	        <button class="btn btn-default" type="button" ng-click="">Go!</button>
+	      </span>
+	    </div><!-- /input-group -->
+</form>

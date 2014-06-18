@@ -14,7 +14,8 @@ angular.module('jeniusApp')
         $scope.getSchemaNodeList = function() {
             CommonServices.getSchemaNodeList()
                 .success(function(data) {
-                    $scope.schemaNodeList = data.results;
+                    console.log(data);
+                    $scope.schemaNodeList = data.results[0][0].nodeList;
                 })
                 .error(function() {
                     console.log('poopy');

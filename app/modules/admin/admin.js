@@ -3,39 +3,32 @@
 angular.module('jeniusApp')
     .controller('AdminCtrl', function($scope, CommonServices) {
 
-        $scope.showPropertyForm = false;
-        $scope.selectedSchemaNode = false;
-        $scope.schemaNodeProperties = false;
+        $scope.schemaNodeList = {
+            nodeLabel: 'Schema_Node',
+            fieldKey: 'label_name'
+        }
 
-        $scope.setPropertyFormValue = function() {
-            $scope.showPropertyForm = true;
+        $scope.newSchemaNode = {
+            nodeLabel: 'Schema_Node',
+            editType: 'create'
         };
 
-        $scope.getSchemaNodeList = function() {
-            CommonServices.getSchemaNodeList()
-                .success(function(data) {
-                    $scope.schemaNodeList = data.results;
-                })
-                .error(function() {
-                    console.log('poopy');
-                });
-        };
-
-        $scope.adminInit = function() {
-            $scope.getSchemaNodeList();
-        };
-        $scope.onNodeSelect = function() {
-            $scope.selectedSchemaNode = JSON.parse($scope.selectedSchemaNode);
-            var payload = {};
-            payload.nodeId = $scope.selectedSchemaNode.nodeId;
-            console.log(payload);
-            CommonServices.getSchemaNodeProperties($scope.selectedSchemaNode)
-                .success(function(data) {
-                    $scope.schemaNodeProperties = data.results[0].approvedProperties;
-                });
-            console.log($scope.schemaNode);
-        };
-
-
+        var payload = {};
+        payload.nodeId = 14;
+        payload.nodeType = "Schema_Node";
+        CommonServices.getJeniusObjectForm(payload)
+            .success(function(data) {
+                console.log(data);
+            });
+        $scope.$watch('schemaNodeList.selectedNode', function(newValue, oldValue) {
+            if (typeof newValue == 'object') {
+                console.log(newValue);
+                var payload = newValue;
+                CommonServices.getSchemaNodeProperties(payload)
+                    .success(function(data) {
+                        $scope.schemaNodeProperties = data.results[0].approvedProperties;
+                    });
+            };
+        });
 
     });

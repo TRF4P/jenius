@@ -24,7 +24,7 @@ angular.module('jeniusApp', [
                 controller: 'MainCtrl'
             })
             .when('/admin', {
-                templateUrl: 'modules/admin/admin.html',
+                templateUrl: 'modules/admin/testAdmin.html',
                 controller: 'AdminCtrl'
             });
         //     .otherwise({

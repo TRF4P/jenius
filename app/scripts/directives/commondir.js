@@ -20,8 +20,6 @@ angular.module('jeniusApp')
                 attr.testing = function() {
                     console.log('directiveTesting');
                 };
-                //attr.submitSchemaNode();
-                //  element.text('this is the commonDir directive ');
             }
         };
     })

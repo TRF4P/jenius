@@ -6,6 +6,36 @@ angular.module('jeniusApp')
             sayHello: function() {
                 return "Hello, World!";
             },
+            getJeniusObjectForm: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/getJeniusObjectForm',
+                    data: JSON.stringify(payload)
+                })
+                    .success(function(data) {
+                        console.log("*******Got Jenius Object Form ******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error calling Jenius Lista*****");
+                        console.log(data);
+                    });
+            },
+            getJeniusList: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/getJeniusList',
+                    data: JSON.stringify(payload)
+                })
+                    .success(function(data) {
+                        console.log("*******Got Jenius List******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error calling Jenius Lista*****");
+                        console.log(data);
+                    });
+            },
             createSchemaNode: function(payload) {
                 return $http({
                     method: "POST",

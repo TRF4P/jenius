@@ -1,0 +1,39 @@
+<div class="container-full" id="adminPage" ng-init="selectedTab='schemaNodeTab';adminInit()">
+	<div class="row">
+		<ul class="nav nav-tabs">
+		  <li class="active" ng-click="selectedTab='schemaNodeTab'"><a data-toggle="tab">Schema Nodes</a></li>
+		  <li ng-click="selectedTab='schemaRelTab'"><a data-toggle="tab">Schema Rels</a></li>
+		  <li ng-click="selectedTab='schemaFormTab'"><a data-toggle="tab">Schema Forms</a></li>
+		  <li ng-click="selectedTab='schemaReportTab'"><a data-toggle="tab">Schema Reports</a></li>
+		</ul>
+	</div>
+
+	<div class="row" ng-show="selectedTab=='schemaNodeTab'">
+		<div class="col-md-4">
+			<h3>Create Schema Node</h3>
+			<div jenius-object-form="createSchemaNode"></div>
+		</div>
+		<div class="col-md-4">
+			<h3>Select Schema Node</h3>
+			<div jenius-list="schemaNodeList"></div>
+		</div>
+	</div>
+
+	<div class="row" ng-show="selectedTab=='schemaRelTab'">
+		<div class="col-md-4">
+			<h3>Create Schema Rel</h3>
+		</div>
+	</div>
+
+	<div class="row" ng-show="selectedTab=='schemaFormTab'">
+		<div class="col-md-4">
+			<h3>Create Schema Form</h3>
+		</div>
+	</div>
+
+	<div class="row" ng-show="selectedTab=='schemaReportTab'">
+		<div class="col-md-4">
+			<h3>Create Schema Form</h3>
+		</div>
+	</div>
+</div>

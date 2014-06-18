@@ -6,7 +6,8 @@ angular.module('jeniusApp')
         var payload = {};
         payload.labelName = "User";
         payload.description = "Users make stuff";
-        $http.get('/api/awesomeThings').success(function(awesomeThings) {
+        $http.get('/api/schema_form/awesomeThings').success(function(awesomeThings) {
+            console.log(awesomeThings);
             $scope.awesomeThings = awesomeThings;
         });
 
