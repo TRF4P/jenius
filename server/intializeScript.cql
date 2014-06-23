@@ -22,7 +22,7 @@ CREATE (s_label_name:Schema_Property{
 					select_options:[],
 					priority:1,
 					data_type:'text',
-					default_value:"#null#"
+					default_value:"null"
 					})
 
 CREATE (s_description:Schema_Property{
@@ -34,7 +34,7 @@ CREATE (s_description:Schema_Property{
 					select_options:[],
 					priority:2,
 					data_type:'text',
-					default_value:"#null#"
+					default_value:"null"
 					})
 
 CREATE (p_property_name:Schema_Property{
@@ -58,7 +58,7 @@ CREATE (p_display_name:Schema_Property{
 					select_options:[],
 					priority:2,
 					data_type:'text',
-					default_value:'#null#'
+					default_value:'null'
 					})
 
 CREATE (p_is_edittable:Schema_Property{
@@ -142,7 +142,7 @@ CREATE (p_default_value:Schema_Property{
 					select_options:[],
 					priority:9,
 					data_type:'text',
-					default_value:'#null#'
+					default_value:'null'
 					})
 
 CREATE (p_property_name)<-[:approved_property]-(schema_property),
@@ -155,4 +155,4 @@ CREATE (p_property_name)<-[:approved_property]-(schema_property),
 	(p_data_type)<-[:approved_property]-(schema_property),
 	(p_default_value)<-[:approved_property]-(schema_property),
 	(s_label_name)<-[:approved_property]-(schema_node),
-	(p_description)<-[:approved_property]-(schema_node);
+	(s_description)<-[:approved_property]-(schema_node);

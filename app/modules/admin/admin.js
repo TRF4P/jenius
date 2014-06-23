@@ -24,11 +24,19 @@ angular.module('jeniusApp')
             if (typeof newValue == 'object') {
                 console.log(newValue);
                 var payload = newValue;
+                var formload = newValue;
+                formload.nodeType = formload.nodeLabel;
+
+                CommonServices.getJeniusObjectForm(payload)
+                    .success(function(data) {
+                        console.log(data);
+                    });
                 CommonServices.getSchemaNodeProperties(payload)
                     .success(function(data) {
                         $scope.schemaNodeProperties = data.results[0].approvedProperties;
                     });
             };
         });
+
 
     });

@@ -1,3 +1,5 @@
+'use strict';
+
 var dbCtrl = require('./dbCtrl.js');
 
 exports.getJeniusList = function(req, res) {
@@ -27,15 +29,22 @@ exports.getJeniusList = function(req, res) {
 };
 
 exports.getJeniusObjectForm = function(req, res) {
-    var params = req.body;
-    if (params.nodeId == null) {
+
+    /**
+     *
+     * params.nodeId = Whatever the Node Idea is for the object, leave Node ID NULL if you're creating an object
+     * params.nodeType = Whatever the node type is
+     *
+     **/
+
+    var params = {};
+    params = req.body;
+    if (params.nodeId === null) {
         params.nodeId = 0;
     };
     var query = [
-
-        'START n=node({nodeId})',
         'MATCH (n)-[r:approved_property]->(p:Schema_Property)',
-        'WHERE n.label_name="Schema_Node"',
+        'WHERE n.label_name="' + params.nodeType + '"',
         'RETURN collect(distinct{',
         '			property_name:p.property_name,',
         '			display_name:p.display_name,',
@@ -51,17 +60,50 @@ exports.getJeniusObjectForm = function(req, res) {
 
     ].join('\n');
 
-    console.log(query);
+    var objectResults = {};
+
 
     dbCtrl.db.query(query, params, function(err, results) {
         console.log(results);
-        res.json({
-            results: results[0],
-            error: err,
-            query: query
+        objectResults = results[0].objectForm;
+        var propertyArray = [];
+        for (var i = 0; i < objectResults.length; i++) {
+            var value = objectResults[i];
+            var property = [
+                '{property_name:"' + value.property_name + '",',
+                'display_name:"' + value.display_name + '",',
+                'is_edittable:' + value.is_edittable + ',',
+                'mandatory_field:' + value.mandatory_field + ',',
+                'has_multiple_values:' + value.has_multiple_values + ',',
+                'select_options:' + JSON.stringify(value.select_options) + ',',
+                'priority:' + value.priority + ',',
+                'data_type:"' + value.data_type + '",',
+                'default_value:' + value.default_value + ',',
+                'property_value:' + value.property_value + '',
+            ].join('\n') + '} as `' + value.property_name + '`';
+            propertyArray.push(property);
+        }
+
+        var finalFirstQuery = [
+            'START n=node(' + params.nodeId + ')',
+            'RETURN '
+        ].join('\n');
+
+        var finalQuery = finalFirstQuery + propertyArray.join('\n ,');
+
+
+        console.log(propertyArray.join('\n'));
+
+        dbCtrl.db.query(finalQuery, function(err, finResults) {
+            res.json({
+                results: finResults[0],
+                error: err,
+                query: finalQuery
+            });
         });
     });
 };
+
 
 exports.createGroupRequest = function(req, res) {};
 exports.approveGroupRequest = function(req, res) {};
