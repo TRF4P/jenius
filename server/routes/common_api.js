@@ -1,6 +1,7 @@
 'use strict';
 
 var dbCtrl = require('./dbCtrl.js');
+var crud = require('./crud.js');
 
 exports.getJeniusList = function(req, res) {
     var params = {};
@@ -105,9 +106,58 @@ exports.getJeniusObjectForm = function(req, res) {
 };
 
 
-exports.createGroupRequest = function(req, res) {};
-exports.approveGroupRequest = function(req, res) {};
-exports.denyGroupRequest = function(req, res) {};
+exports.submitGroupRequest = function(req, res) {
+    var createRequest = req.body;
+    var startVariables = [];
+    var createNodes = [];
+    var archiveNodes = [];
+    var newRelationships = [];
+    var archiveRelationships = [];
+    var propertyChanges = [];
+
+    for (var i = 0; i < createRequest.variables.length; i++) {
+        startVariables.push(crud.setExistingVariable(createRequest.variables[i]));
+    }
+
+
+    for (var i = 0; i < createRequest.createNodes.length; i++) {
+        createNodes.push(crud.reqCreateNode(createRequest.newNodes[i]));
+    }
+
+    for (var i = 0; i < createRequest.archiveNodes.length; i++) {
+        archiveNodes.push(crud.reqArchiveNode(createRequest.archiveNodes[i]));
+    }
+    for (var i = 0; i < createRequest.newRelationships.length; i++) {
+        newRelationships.push(crud.reqNewRel(createRequest.newRelationships[i]));
+    }
+    for (var i = 0; i < createRequest.archiveRelationships.length; i++) {}
+    for (var i = 0; i < createRequest.editProperties.length; i++) {}
+
+    //dbCtrl.db.query(query, function(err, results) {
+    //    res.json({
+    //        results: results.data[0],
+    //        error: err,
+    //        query: query
+    //    });
+    //});
+    var query = startVariables;
+    res.json({
+        //  results: results.data[0],
+        //  error: err,
+        query: query
+    });
+
+};
+
+exports.approveGroupRequest = function(req, res) {
+
+
+};
+
+exports.denyGroupRequest = function(req, res) {
+
+
+};
 
 
 var testObj = {};

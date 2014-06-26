@@ -6,6 +6,62 @@ angular.module('jeniusApp')
             sayHello: function() {
                 return "Hello, World!";
             },
+            getGroupRequestObject: function() {
+                var grObj = {
+                    variables: [],
+                    createNodes: [],
+                    newRelationships: [],
+                    editProperties: [],
+                    archiveNodes: [],
+                    archiveRelationships: []
+                };
+                return grObj;
+            },
+            submitGroupRequest: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/submitGroupRequest',
+                    data: JSON.stringify(payload)
+                })
+                    .success(function(data) {
+                        console.log("*******Got Jenius Object Form ******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error calling Jenius Lista*****");
+                        console.log(data);
+                    });
+            },
+            approveGroupRequest: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/submitGroupRequest',
+                    data: JSON.stringify(payload)
+                })
+                    .success(function(data) {
+                        console.log("*******Got Jenius Object Form ******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error calling Jenius Lista*****");
+                        console.log(data);
+                    });
+            },
+            denyGroupRequest: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/submitGroupRequest',
+                    data: JSON.stringify(payload)
+                })
+                    .success(function(data) {
+                        console.log("*******Got Jenius Object Form ******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error calling Jenius Lista*****");
+                        console.log(data);
+                    });
+            },
             getJeniusObjectForm: function(payload) {
                 return $http({
                     method: "POST",

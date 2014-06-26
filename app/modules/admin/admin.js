@@ -29,6 +29,9 @@ angular.module('jeniusApp')
 
                 CommonServices.getJeniusObjectForm(payload)
                     .success(function(data) {
+                        $scope.selectedObject = {};
+                        $scope.selectedObject.properties = data.results;
+                        $scope.selectedObject.ready = true;
                         console.log(data);
                     });
                 CommonServices.getSchemaNodeProperties(payload)
