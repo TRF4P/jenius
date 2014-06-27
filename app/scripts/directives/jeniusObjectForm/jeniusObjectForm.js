@@ -46,6 +46,7 @@ angular.module('jeniusApp')
                     editVar.variableId = scope.nodeId;
                     groupRequest.variables.push(editVar);
                     groupRequest.editProperties.push(property);
+                    console.log(groupRequest);
                     CommonServices.submitGroupRequest(groupRequest)
                         .success(function(data) {
                             console.log(data);
@@ -68,13 +69,6 @@ angular.module('jeniusApp')
                 scope.submitSingleChange = function() {};
                 scope.createObject = function() {};
 
-                scope.initializeForm = function() {
-                    if (scope.jof.editType === 'createEdit') {
-                        console.log(scope.jof.editType);
-                        CommonServices.getJeniusObjectForm()
-                    }
-                };
-
                 /**
                  *
                  * Watchers are located here
@@ -84,13 +78,10 @@ angular.module('jeniusApp')
                 scope.$watch('jof', function(newValue, oldValue) {
                     console.log("JOF Changed!")
                     console.log("JP Changed!")
-                    scope.isEmpty = scope.isEmptyObject(scope.jof);
-                    angular.forEach(scope.jof, function(prop, key) {
+                    scope.isEmpty = scope.isEmptyObject(scope.jof.properties);
+                    angular.forEach(scope.jof.properties, function(prop, key) {
                         prop.changed_value = prop.property_value;
                     });
-                    if (newValue === true) {
-                        scope.initializeForm();
-                    };
                 });
 
 

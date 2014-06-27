@@ -6,7 +6,7 @@
 	</div>
 	<div class="row" id="properties">
 		<div class="form-group" 
-			ng-repeat="(propKey, prop) in jof|orderBy:'priority'"
+			ng-repeat="(propKey, prop) in jof.properties|orderBy:'priority'"
 			ng-init="prop.changed_value = prop.property_value">
 	    <label for="exampleInputEmail1">{{prop.display_name}}</label>
 	    <div class="row">
