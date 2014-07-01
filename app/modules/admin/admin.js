@@ -2,26 +2,35 @@
 
 angular.module('jeniusApp')
     .controller('AdminCtrl', function($scope, CommonServices) {
+        //  $scope.selectedObject = {};
+        // $scope.selectedObject.isEmpty = true;
+        // $scope.selectedObject.properties = {};
+
+        $scope.generateNewSchemaNode = function() {
+            var payload = {};
+            payload.nodeId = null;
+            payload.nodeType = 'Schema_Node';
+            CommonServices.getJeniusObjectForm(payload)
+                .success(function(data) {
+                    console.log(data);
+                    $scope.newSchemaNode = {
+                        node_label: 'Schema_Node',
+                        editType: 'createEdit',
+
+                        isEmpty: false,
+                        properties: data.results
+                    };
+                });
+        };
 
         $scope.schemaNodeList = {
             nodeLabel: 'Schema_Node',
             fieldKey: 'label_name'
-        }
-
-        $scope.newSchemaNode = {
-            nodeLabel: 'Schema_Node',
-            editType: 'create'
         };
 
-        var payload = {};
-        payload.nodeId = 14;
-        payload.nodeType = "Schema_Node";
-        CommonServices.getJeniusObjectForm(payload)
-            .success(function(data) {
-                console.log(data);
-            });
         $scope.$watch('schemaNodeList.selectedNode', function(newValue, oldValue) {
             if (typeof newValue == 'object') {
+                console.log('selectedNodeChanged');
                 console.log(newValue);
                 var payload = newValue;
                 var formload = newValue;
@@ -29,9 +38,12 @@ angular.module('jeniusApp')
 
                 CommonServices.getJeniusObjectForm(payload)
                     .success(function(data) {
-                        $scope.selectedObject = {};
-                        $scope.selectedObject.properties = data.results;
-                        $scope.selectedObject.ready = true;
+                        var holder = {};
+                        holder.properties = data.results;
+                        holder.isEmpty = false;
+                        holder.node_label = "Schema_Node";
+                        holder.editType = 'singleEdit';
+                        $scope.selectedObject = holder;
                         console.log(data);
                     });
                 CommonServices.getSchemaNodeProperties(payload)

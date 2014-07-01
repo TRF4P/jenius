@@ -6,6 +6,15 @@ angular.module('jeniusApp')
             sayHello: function() {
                 return "Hello, World!";
             },
+            getCreateRequestObject: function() {
+                var crObj = {
+                    variableName: null,
+                    variableId: null,
+                    node_label: null,
+                    properties: {}
+                };
+                return crObj;
+            },
             getGroupRequestObject: function() {
                 var grObj = {
                     variables: [],
@@ -35,7 +44,7 @@ angular.module('jeniusApp')
             approveGroupRequest: function(payload) {
                 return $http({
                     method: "POST",
-                    url: '/api/submitGroupRequest',
+                    url: '/api/approveGroupRequest',
                     data: JSON.stringify(payload)
                 })
                     .success(function(data) {
@@ -50,7 +59,7 @@ angular.module('jeniusApp')
             denyGroupRequest: function(payload) {
                 return $http({
                     method: "POST",
-                    url: '/api/submitGroupRequest',
+                    url: '/api/denyGroupRequest',
                     data: JSON.stringify(payload)
                 })
                     .success(function(data) {

@@ -30,5 +30,7 @@ app.post('/api/getSchemaNodeProperties', routes.schema_node.getSchemaNodePropert
 app.post('/api/getJeniusList', routes.common_api.getJeniusList);
 app.post('/api/getJeniusObjectForm', routes.common_api.getJeniusObjectForm);
 app.post('/api/submitGroupRequest', routes.common_api.submitGroupRequest);
+app.post('/api/approveGroupRequest', routes.common_api.approveGroupRequest);
+app.post('/api/denyGroupRequest', routes.common_api.denyGroupRequest);
 
 module.exports = app;

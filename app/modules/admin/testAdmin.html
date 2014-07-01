@@ -1,4 +1,8 @@
-<div class="container-full" id="adminPage" ng-init="selectedTab='schemaNodeTab';adminInit()">
+<div class="container-full" id="adminPage" ng-init="selectedTab='schemaNodeTab';
+	adminInit();
+	selectedObject = {};
+	selectedObject.properties={};
+	selectedObject.isEmpty=true">
 	<div class="row">
 		<ul class="nav nav-tabs">
 		  <li class="active" ng-click="selectedTab='schemaNodeTab'"><a data-toggle="tab">Schema Nodes</a></li>
@@ -11,13 +15,14 @@
 	<div class="row" ng-show="selectedTab=='schemaNodeTab'">
 		<div class="col-md-4">
 			<h3>Create Schema Node</h3>
-			<div jenius-object-form="createSchemaNode"></div>
+			<button ng-click="generateNewSchemaNode()" class="btn btn-default">Get Form</button>
+			<div jenius-object-form="newSchemaNode"></div>
 		</div>
 		<div class="col-md-4">
 			<h3>Select Schema Node</h3>
 			<div jenius-list="schemaNodeList"></div>
 			<hr>
-			<div jenius-object-form="selectedObject.properties"
+			<div jenius-object-form="selectedObject">
 		</div>
 	</div>
 

@@ -2,14 +2,16 @@ START n=node(*) MATCH (n)-[r]-() DELETE r,n;
 START n=node(*) MATCH (n) DELETE n;
 CREATE (schema_node:Schema_Node {
 					label_name:'Schema_Node',
-					description:'Schema Node'
+					description:'Schema Node',
+					number:44
 					})
 
 
 
 CREATE (schema_property:Schema_Node {
 					label_name:'Schema_Property',
-					description:'Schema Property'
+					description:'Schema Property',
+					number:22
 					})
 
 
@@ -34,6 +36,17 @@ CREATE (s_description:Schema_Property{
 					select_options:[],
 					priority:2,
 					data_type:'text',
+					default_value:"null"
+					})
+CREATE (s_number:Schema_Property{
+					property_name:'number',
+					display_name:'Number',
+					is_edittable:true,
+					mandatory_field:true,
+					has_multiple_values:false,
+					select_options:[],
+					priority:2,
+					data_type:'number=',
 					default_value:"null"
 					})
 
@@ -156,3 +169,4 @@ CREATE (p_property_name)<-[:approved_property]-(schema_property),
 	(p_default_value)<-[:approved_property]-(schema_property),
 	(s_label_name)<-[:approved_property]-(schema_node),
 	(s_description)<-[:approved_property]-(schema_node);
+	(s_number)<-[:approved_property]-(schema_node);
