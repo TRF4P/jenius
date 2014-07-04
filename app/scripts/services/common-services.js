@@ -15,6 +15,24 @@ angular.module('jeniusApp')
                 };
                 return crObj;
             },
+            getRelRequestObject: function() {
+                var crObj = {
+                    relationship_type: null,
+                    srcObj: {
+                        variableName: null,
+                        variableId: null
+                    },
+                    tgtObj: {
+                        variableName: null,
+                        variableId: null
+                    },
+                    reqObj: {
+                        variableName: null,
+                        variableId: null
+                    }
+                };
+                return crObj;
+            },
             getGroupRequestObject: function() {
                 var grObj = {
                     variables: [],

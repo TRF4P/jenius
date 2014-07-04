@@ -1,5 +1,5 @@
 angular.module('jeniusApp')
-    .directive('jeniusObjectForm', function(CommonServices) {
+    .directive('jeniusObjectForm', function(CommonServices, JeniusCrud) {
         return {
             templateUrl: '/scripts/directives/jeniusObjectForm/jeniusObjectForm.html',
             //restrict: 'A',
@@ -12,6 +12,7 @@ angular.module('jeniusApp')
                  * form.nodeId
                  * form.nodeLabel
                  * form.editType
+                 * form.editStatus
                  * form.formReady
                  */
 
@@ -20,10 +21,17 @@ angular.module('jeniusApp')
                  * Variables for the Object Form are located here
                  *
                  **/
-                scope.jof = {};
-                scope.jof.properties = {};
-                scope.isEmpty = true;
-                scope.createReady = false;
+                if (typeof scope.jof === 'undefined') {
+                    scope.jof = {
+                        properties: {},
+                        isNew: false,
+                        isEmpty: true
+                    };
+                    scope.jof.properties = {};
+                    scope.isEmpty = true;
+                    scope.createReady = false;
+                }
+
 
 
 
@@ -40,17 +48,17 @@ angular.module('jeniusApp')
                     }
                     return true;
                 }
-
-                scope.reviewCreateRequest = function() {
-                    console.log(scope.jof.properties);
-                    var isReady = true;
-                    angular.forEach(scope.jof.properties, function(propVal, propKey) {
-                        if (propVal.mandatory_field === true) {
-                            if (propVal.changed_value === propVal.property_value) {
-                                isReady = false;
-                            }
+                scope.setDefaultValues = function(jofObj) {
+                    console.log('setting default values');
+                    angular.forEach(jofObj, function(prop, key) {
+                        if (prop.default_value !== 'null' & prop.default_value !== null) {
+                            prop.changed_value = prop.default_value;
                         }
                     });
+                };
+                scope.reviewCreateRequest = function() {
+                    console.log(scope.jof.properties);
+                    var isReady = JeniusCrud.reviewCreate(scope.jof.properties);
 
                     if (isReady === true) {
                         //cr means create request
@@ -147,6 +155,9 @@ angular.module('jeniusApp')
                         angular.forEach(newValue.properties, function(prop, key) {
                             prop.changed_value = prop.property_value;
                         });
+                        if (scope.jof.isNew === true) {
+                            scope.setDefaultValues(scope.jof.properties);
+                        }
                     };
                 });
 

@@ -1,13 +1,13 @@
-<form ng-hide="isEmpty===true">
+<form ng-hide="isEmpty!==false">
 	<div class="row">
 		<ul class="nav nav-tabs">
 		  <li class="active" ng-click="selectedTab='schemaNodeTab'"><a data-toggle="tab">All Properties</a></li>
 		  <li class="pull-right" ng-click="selectedTab='schemaNodeTab'">
 		  		<button class="btn btn-default btn-sm" 
-		  			ng-show="jof.editType==='createEdit' && createReady!==true"
+		  			ng-show="jof.isNew===true && createReady!==true && jof.editType==='singleEdit'"
 		  			ng-click="reviewCreateRequest(jof)">Submit</button>
 
-		  		<div class="btn-group" ng-show="jof.editType==='createEdit' && createReady===true">
+		  		<div class="btn-group" ng-show="jof.editType==='singleEdit' && jof.isNew===true && createReady===true">
 				  <button 
 				  	ng-click="approveCreateRequest()"
 				  	type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span></button>
@@ -22,13 +22,13 @@
 	<div class="row" id="properties">
 		<div class="form-group" 
 			ng-repeat="(propKey, prop) in jof.properties|orderBy:'priority'">
-	    <label for="exampleInputEmail1">{{prop.display_name}}</label>
+	    <label for="exampleInputEmail1" ng-class="{'label-mandatory-field':prop.mandatory_field===true && prop.changed_value===null}">{{prop.display_name}}</label>
 	    <div class="row">
-	     <div id="input_section" ng-class="{'col-md-12':prop.changed_value===prop.property_value || jof.editType!=='singleEdit','col-md-8':prop.changed_value!==prop.property_value && jof.editType==='singleEdit'}">
+	     <div id="input_section" class="col-md-12" ng-class="{'col-md-12':prop.changed_value===prop.property_value || jof.editType!=='singleEdit','col-md-8':prop.changed_value!==prop.property_value && jof.editType==='singleEdit' && jof.isNew!==true}">
 	    	<div jenius-property="prop"></div>
 	    </div>
 
-	    <div ng-if="prop.changed_value!==prop.property_value && jof.editType==='singleEdit'" class="col-md-4" id="confirm_section">
+	    <div ng-if="prop.changed_value!==prop.property_value && jof.editType==='singleEdit' && jof.isNew!==true" class="col-md-4" id="confirm_section">
 	    	<button ng-show="prop.changed_value!==prop.property_value && prop.submitSuccess!==true" 
 			  class="btn btn-default" 
 			  ng-click="submitPropertyChange(prop)">Submit</button>

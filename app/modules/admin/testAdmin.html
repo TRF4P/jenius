@@ -9,26 +9,118 @@
 		  <li ng-click="selectedTab='schemaRelTab'"><a data-toggle="tab">Schema Rels</a></li>
 		  <li ng-click="selectedTab='schemaFormTab'"><a data-toggle="tab">Schema Forms</a></li>
 		  <li ng-click="selectedTab='schemaReportTab'"><a data-toggle="tab">Schema Reports</a></li>
+		  <li ng-click="selectedTab='testCreationTab'"><a data-toggle="tab">Testing</a></li>
 		</ul>
 	</div>
 
 	<div class="row" ng-show="selectedTab=='schemaNodeTab'">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<h3>Create Schema Node</h3>
 			<button ng-click="generateNewSchemaNode()" class="btn btn-default">Get Form</button>
+			<hr>
 			<div jenius-object-form="newSchemaNode"></div>
 		</div>
-		<div class="col-md-4">
+
+		<div class="col-md-3 col-md-offset-1">
 			<h3>Select Schema Node</h3>
 			<div jenius-list="schemaNodeList"></div>
 			<hr>
-			<div jenius-object-form="selectedObject">
+			<div jenius-object-form="selectedObject"></div>
+		</div>
+
+		<div class="col-md-3 col-md-offset-1" ng-show="propertiesLoaded==true">
+			<h3>Select Schema Property</h3>
+
+			<select ng-model="selectedProperty" ng-change="loadProperty(selectedProperty)" ng-options="propKey as prop.display_name for (propKey, prop) in schemaNodeProperties">
+				<option value="">--Select Prop--</option>
+			</select>
+			OR
+			<button class="btn btn-default" ng-click="createProperty()">New Property</button>
+			<hr>
+					<button class="btn btn-default btn-sm" 
+		  			ng-click="submitNewProperty()">Submit</button>
+
+		  		<div class="btn-group" ng-show="newProperty.createReady===true">
+				  <button 
+				  	ng-click="approveNewProperty()"
+				  	type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span></button>
+				  <button
+				  	ng-click="denyNewProperty()" 
+				  	type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span></button>
+				</div>
+				<div ng-show="selectedProperty == 'newProperty'" jenius-object-form="newProperty"></div>
+			<hr>
+			<div ng-repeat="(propKey, prop) in schemaNodeProperties" ng-show="propKey == selectedProperty">
+				<div jenius-object-form="prop.jof"></div>
+		  	</div>
 		</div>
 	</div>
 
 	<div class="row" ng-show="selectedTab=='schemaRelTab'">
 		<div class="col-md-4">
 			<h3>Create Schema Rel</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+				 <button class="btn btn-default" ng-click="resetSchemaRel()">Reset</button>
+				 <button class="btn btn-default" ng-click="submitSchemaRel()">Submit</button>
+				 <div class="btn-group" ng-show="newSchemaRelObject.createReady===true">
+				  <button 
+				  	ng-click="approveSchemaRel()"
+				  	type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span></button>
+				  <button
+				  	ng-click="denySchemaRel()" 
+				  	type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span></button>
+				</div>
+				<hr>
+				 	<label>Source Node</label>
+					<div jenius-list="srcRelNodeList"></div>
+					<hr>
+					<label>Rel Object</label>
+					<div jenius-object-form="newSchemaRelObject"></div>
+					<hr>
+					<label>Target Node</label>
+					<div jenius-list="tgtRelNodeList"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-7 col-md-offset-1">
+			<h3>Test Relationship Creation</h3>
+				<div class="panel-body">
+					<div class="row">
+					<div class="col-md-12">
+					 <button class="btn btn-default" ng-click="resetTestRelationship()">Reset</button>
+				 <button class="btn btn-default" ng-click="submitTestRelationship()">Submit</button>
+				 <div class="btn-group" ng-show="newTestRel.createReady===true">
+				  <button 
+				  	ng-click="approveTestRelationship()"
+				  	type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span></button>
+				  <button
+				  	ng-click="denyTestRelationship()" 
+				  	type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span></button>
+				</div>
+				<hr>
+						</div>
+					</div>
+			<div class="row">
+					<div class="col-md-4">
+							<div jenius-list="srcTestList"></div>
+							<div jenius-list="srcObjectList"></div>
+					<select class="form-control" 
+					ng-model="srcObjectList.fieldKey" 
+					ng-options="field.property_name as field.display_name for (key,field) in srcFieldKeys"><option>--Select Field Name--</option></select>
+						</div>
+					<div class="col-md-4">
+						<div jenius-list="relList"></div>
+						</div>
+				 	<div class="col-md-4">
+							<div jenius-list="tgtTestList"></div>
+							<div jenius-list="tgtObjectList"></div>
+					<select class="form-control" 
+					ng-model="tgtObjectList.fieldKey" 
+					ng-options="field.property_name as field.display_name for (key,field) in tgtFieldKeys"><option>--Select Field Name--</option></select>
+						</div>
+					</div>
+				</div>
 		</div>
 	</div>
 
@@ -41,6 +133,22 @@
 	<div class="row" ng-show="selectedTab=='schemaReportTab'">
 		<div class="col-md-4">
 			<h3>Create Schema Form</h3>
+		</div>
+	</div>
+	<div class="row" ng-show="selectedTab=='testCreationTab'">
+		<div class="col-md-4">
+			<h3>Create New Nodes</h3>
+			<div jenius-list="testNodeList"></div>
+			<hr>
+			<div jenius-object-form="selectedTestObject"></div>
+		</div>
+		<div class="col-md-4 col-md-offset-1">
+			<h3>Edit Existing Nodes</h3>
+			<div jenius-list="existingNodeList"></div>
+			<label>Please Provide Field Key</label>
+			<select class="form-control" ng-model="existingNodeList.fieldKey" ng-options="field.property_name as field.display_name for (key,field) in testFieldKeys"><option>--Select Field Name--</option></select>
+			<hr>
+			<div jenius-object-form="existingTestObject"></div>
 		</div>
 	</div>
 </div>

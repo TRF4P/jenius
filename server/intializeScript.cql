@@ -46,8 +46,8 @@ CREATE (s_number:Schema_Property{
 					has_multiple_values:false,
 					select_options:[],
 					priority:2,
-					data_type:'number=',
-					default_value:"null"
+					data_type:'number',
+					default_value:44
 					})
 
 CREATE (p_property_name:Schema_Property{
@@ -59,7 +59,7 @@ CREATE (p_property_name:Schema_Property{
 					select_options:[],
 					priority:1,
 					data_type:'text',
-					default_value:false
+					default_value:'null'
 					})
 
 CREATE (p_display_name:Schema_Property{
@@ -114,12 +114,12 @@ CREATE (p_select_options:Schema_Property{
 					property_name:'select_options',
 					display_name:'Select Options',
 					is_edittable:true,
-					mandatory_field:true,
+					mandatory_field:false,
 					has_multiple_values:true,
 					select_options:[],
 					priority:6,
 					data_type:'text',
-					default_value:[]
+					default_value:['null']
 					})
 
 CREATE (p_priority:Schema_Property{
@@ -143,14 +143,14 @@ CREATE (p_data_type:Schema_Property{
 					select_options:['text','textarea','number','date','boolean','text-array'],
 					priority:8,
 					data_type:'text',
-					default_value:'text'
+					default_value:'"text"'
 					})
 
 CREATE (p_default_value:Schema_Property{
 					property_name:'default_value',
 					display_name:'Default Value',
 					is_edittable:true,
-					mandatory_field:true,
+					mandatory_field:false,
 					has_multiple_values:false,
 					select_options:[],
 					priority:9,
@@ -168,5 +168,5 @@ CREATE (p_property_name)<-[:approved_property]-(schema_property),
 	(p_data_type)<-[:approved_property]-(schema_property),
 	(p_default_value)<-[:approved_property]-(schema_property),
 	(s_label_name)<-[:approved_property]-(schema_node),
-	(s_description)<-[:approved_property]-(schema_node);
+	(s_description)<-[:approved_property]-(schema_node),
 	(s_number)<-[:approved_property]-(schema_node);

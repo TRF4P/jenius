@@ -1,8 +1,50 @@
 <div id="jeniusProperty">
-	<input class="form-control" 
-		ng-if="jp.data_type=='text'" 
+	<div ng-if="jp.data_type=='text' && jp.has_multiple_values===false">
+		<input class="form-control" 
 		type="text" 
 		ng-model="jp.changed_value"
 		ng-change="" >
-	<input class="form-control" ng-if="jp.data_type=='number'" type="number" ng-model="jp.changed_value">
+	</div>
+
+	<div ng-if="jp.data_type=='text' && jp.has_multiple_values===true">
+		<select ng-model="jp.changed_value" ng-options="value for value in jp.select_options">
+			<option>--select value--</option>
+		</select>
+	</div>
+
+	<div ng-if="jp.data_type=='number'">
+		<input class="form-control" 
+		type="number" 
+		ng-model="jp.changed_value"
+		ng-change="">
+	</div>
+
+	<span ng-if="jp.data_type=='boolean'">
+		<label class="radio-inline">
+			<input
+			type="radio" 
+			ng-model="jp.changed_value"
+			ng-value="true">True
+		</label>
+
+		<label class="radio-inline">
+			<input 
+			type="radio" 
+			ng-model="jp.changed_value"
+			ng-value="false">False
+		</label>
+
+		<label class="radio-inline">
+			<input
+			type="radio" 
+			ng-model="jp.changed_value"
+			ng-value="'null'">Unknown
+		</label>
+	</span>
+
+	<div ng-if="jp.data_type=='textarea' && jp.has_multiple_values===false">
+		<textarea rows="3" ng-model="jp.changed_value" class="form-control"></textarea>
+	</div>
+
+
 </div>

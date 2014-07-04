@@ -9,12 +9,10 @@ var jsonToCypherString = function(jsonObj) {
 };
 
 getRelReq = function(prop) {
-    cypherString = ['{',
-        'request_status:0',
+    cypherString = ['{request_status:0',
         'request_date:timestamp()',
         'last_modified:timestamp()',
-        'relationship_type:',
-        '}'
+        'relationship_type:"' + prop.relationship_type + '"}'
     ].join(', \n');
     return cypherString;
 };
@@ -60,9 +58,14 @@ exports.approveArchiveNode = function() {};
 
 exports.reqCreateRelationship = function(relObj) {
     var cypherString = [
-        'CREATE (groupReq)-[:relationship_request]->(' + relObj.variableName + '_relReq:Relationship_Request)',
-        'CREATE (' + relObj.variableName + ')<-[:requested_relationship_source]-',
-        '(' + relObj.variableName + '_relReq)-[:requested_relationship_target]->()-'
+        ' CREATE (groupReq)-[:relationship_request]->(' +
+        relObj.srcObj.variableName + '_' +
+        relObj.tgtObj.variableName +
+        '_relReq:Relationship_Request' + getRelReq(relObj) + ')',
+        'CREATE (' + relObj.srcObj.variableName + ')<-[:requested_relationship_source]-',
+        '(' + relObj.srcObj.variableName + '_' +
+        relObj.tgtObj.variableName +
+        '_relReq)-[:requested_relationship_target]->(' + relObj.tgtObj.variableName + ')'
     ].join('');
     return cypherString;
 };
@@ -144,6 +147,7 @@ getCreateReq = function(createObj) {
     ].join(', \n');
     return cypherString;
 };
+
 
 getEditReq = function(propObj) {
     cypherString = ['{request_status:0',

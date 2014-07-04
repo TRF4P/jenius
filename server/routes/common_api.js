@@ -22,7 +22,7 @@ var checkForValue = function(theArray) {
 
 exports.getJeniusList = function(req, res) {
     var params = {};
-    console.log(req.body);
+
     params.nodeLabel = req.body.nodeLabel;
     params.fieldKey = req.body.fieldKey;
     var query = [
@@ -34,10 +34,9 @@ exports.getJeniusList = function(req, res) {
 
     ].join('\n');
 
-    console.log(query);
 
     dbCtrl.db.query(query, params, function(err, results) {
-        console.log("HI");
+
         res.json({
             results: results[0].nodeList,
             error: err,
@@ -76,14 +75,13 @@ exports.getJeniusObjectForm = function(req, res) {
         '			default_value:p.default_value,',
         '			property_value:"n."+p.property_name',
         ' }) as objectForm'
-
     ].join('\n');
-
+    //  console.log(query);
     var objectResults = {};
 
 
     dbCtrl.db.query(query, params, function(err, results) {
-        console.log(results);
+
         objectResults = results[0].objectForm;
         var propertyArray = [];
         for (var i = 0; i < objectResults.length; i++) {
@@ -111,10 +109,7 @@ exports.getJeniusObjectForm = function(req, res) {
         ].join('\n');
 
         var finalQuery = finalFirstQuery + propertyArray.join('\n ,');
-
-
-        console.log(propertyArray.join('\n'));
-
+        // console.log(finalQuery);
         dbCtrl.db.query(finalQuery, function(err, finResults) {
             res.json({
                 results: finResults[0],
@@ -147,7 +142,7 @@ exports.submitGroupRequest = function(req, res) {
         archiveNodes.push(crud.reqArchiveNode(createRequest.archiveNodes[i]));
     }
     for (var i = 0; i < createRequest.newRelationships.length; i++) {
-        newRelationships.push(crud.reqNewRel(createRequest.newRelationships[i]));
+        newRelationships.push(crud.reqCreateRelationship(createRequest.newRelationships[i]));
     }
     for (var i = 0; i < createRequest.archiveRelationships.length; i++) {}
     for (var i = 0; i < createRequest.editProperties.length; i++) {
@@ -165,9 +160,12 @@ exports.submitGroupRequest = function(req, res) {
     if (startVariables.length > 0) {
         startingQuery = "START " + startVariables;
     }
-    var query = startingQuery + "\n" + crud.getGroupReq() + "\n" + createNodes.join("\n") + editProperties.join("\n") +
+    var query = startingQuery + "\n" +
+        crud.getGroupReq() + "\n" +
+        createNodes.join(" \n ") +
+        newRelationships.join(' \n ') +
+        editProperties.join(" \n ") +
         '\n RETURN {groupId:ID(groupReq)} as `request`';
-    console.log(query);
     dbCtrl.db.query(query, function(err, results) {
         res.json({
             results: results[0],
@@ -192,6 +190,7 @@ exports.approveGroupRequest = function(req, res) {
         '-[:requested_relationship_source]->(relationship_source_node)',
         'OPTIONAL MATCH (groupReq)-[:relationship_request]->(relationship_requests)',
         '-[:requested_relationship_target]->(relationship_target_node)',
+
         'RETURN collect(distinct {',
         'reqObj:{',
         'variableName:"edit_request_"+ID(edit_requests),',
@@ -216,16 +215,30 @@ exports.approveGroupRequest = function(req, res) {
         'variableId:ID(node_being_created)',
         '}',
         '}) as `create_requests`,',
+
         'collect(distinct{',
         'reqId:ID(archive_requests)',
         '}) as `archive_requests`,',
         'collect(distinct{',
-        'reqId:ID(relationship_requests)',
+        'srcObj:{',
+        'variableName:lower(head(labels(relationship_source_node)))+"_"+ID(relationship_source_node),',
+        'variableId: ID(relationship_source_node)',
+        '},',
+        'tgtObj:{',
+        'variableName:lower(head(labels(relationship_target_node)))+"_"+ID(relationship_target_node),',
+        'variableId: ID(relationship_target_node)',
+        '},',
+        'reqObj:{',
+        'variableName:lower(head(labels(relationship_requests)))+"_"+ID(relationship_requests),',
+        'variableId: ID(relationship_requests)},',
+        'query:"CREATE ("+lower(head(labels(relationship_source_node)))+"_"+ID(relationship_source_node)+"' +
+        ')-[:"+relationship_requests.relationship_type+"]->("+' +
+        'lower(head(labels(relationship_target_node)))+"_"+ID(relationship_target_node)+")"' +
         '}) as `relationship_requests`'
     ].join('\n')
-
+    console.log(query);
     dbCtrl.db.query(query, function(err, results) {
-        console.log(JSON.stringify(results[0]));
+
         var startNodes = [];
         var matchStatements = [];
         var approveCreateNodes = [];
@@ -250,22 +263,30 @@ exports.approveGroupRequest = function(req, res) {
                 approveCreateNodes.push(createObj.set);
             }
         }
-        /*
+
+        if (results[0].relationship_requests[0].reqObj.variableId !== null) {
+            for (var i = 0; i < results[0].relationship_requests.length; i++) {
+                startNodes.push(results[0].relationship_requests[i].reqObj.variableName + '= node(' +
+                    results[0].relationship_requests[i].reqObj.variableId + ')');
+
+                startNodes.push(results[0].relationship_requests[i].srcObj.variableName + '= node(' +
+                    results[0].relationship_requests[i].srcObj.variableId + ')');
+
+                startNodes.push(results[0].relationship_requests[i].tgtObj.variableName + '= node(' +
+                    results[0].relationship_requests[i].tgtObj.variableId + ')');
+                approveNewRelationships.push(results[0].relationship_requests[i].query);
+            }
+        }
+        /* 
+
         if (results[0].archive_requests[0].reqId !== null) {
             for (var i = 0; i < results[0].archive_requests.length; i++) {
                 approveArchiveNodes.push(crud.reqArchiveNode(createRequest.archiveNodes[i]));
             }
         }
-
-        if (results[0].relationship_requests[0].reqId !== null) {
-            for (var i = 0; i < results[0].relationship_requests.length; i++) {
-                approveNewRelationships.push(crud.reqNewRel(createRequest.newRelationships[i]));
-            }
+        if (results[0].archive_relationship_requests[0].reqId !== null) {
+            for (var i = 0; i < createRequest.archiveRelationships.length; i++) {}
         }
-
-        //if (results[0].archive_relationship_requests[0].reqId !== null) {
-        //    for (var i = 0; i < createRequest.archiveRelationships.length; i++) {}
-        //}
 
         */
         if (results[0].edit_requests[0].node_key !== null) {
@@ -281,12 +302,18 @@ exports.approveGroupRequest = function(req, res) {
                 approveEditProperties.push(appEdit.set);
             }
         }
+        var startNodes = startNodes.reduce(function(a, b) {
+            if (a.indexOf(b) < 0) a.push(b);
+            return a;
+        }, []);
         var finalValues = [
             'START groupReq=node(' + groupId + '),',
             startNodes.join(','),
             approveCreateNodes,
-            approveEditProperties
+            approveEditProperties,
+            approveNewRelationships.join(" \n ")
         ].join('\n');
+        console.log(finalValues);
         dbCtrl.db.query(finalValues, function(err, finResults) {
             res.json({
                 results: finResults,

@@ -51,20 +51,13 @@ exports.getSchemaNodeProperties = function(req, res) {
         'START n=node({nodeId})',
         'MATCH (n)-[:approved_property]->(p:Schema_Property)',
         'RETURN collect({',
-        'nodeId:ID(p),',
-        'propertyName:p.property_name,',
-        'displayName:p.display_name,',
-        'isEdittable:p.is_edittable,',
-        'mandatoryField:p.mandatoryField,',
-        'has_multiple_values:p.hasMultipleValues,',
-        'selectOptions:p.select_options,',
-        'priority:p.priority,',
-        'dataType:p.data_type',
+        'node_id:ID(p),',
+        'property_name:p.property_name,',
+        'display_name:p.display_name,',
+        'jof:{isEmpty:true}',
         '}) as approvedProperties'
-
     ].join('\n');
 
-    console.log(query);
 
     dbCtrl.db.query(query, params, function(err, results) {
         res.json({
