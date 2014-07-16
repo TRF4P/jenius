@@ -15,15 +15,23 @@ var checkForValue = function(theArray) {
 
 exports.getJeniusList = function(req, res) {
     var params = {};
-
     params.nodeLabel = req.body.nodeLabel;
-    params.fieldKey = req.body.fieldKey;
+    params.fieldKey = +"n." + req.body.fieldKey;
+    /*
     var query = [
         'MATCH (n:' + params.nodeLabel + ')',
         'RETURN collect({',
         'nodeId:ID(n),',
         'nodeLabel:head(labels(n)),',
         'nodeName:n.' + params.fieldKey + '}) as `nodeList`'
+].join('\n');
+*/
+    var query = [
+        'MATCH (n:{nodeLabel})',
+        'RETURN collect({',
+        'nodeId:ID(n),',
+        'nodeLabel:head(labels(n)),',
+        'nodeName:{fieldKey}}) as `nodeList`'
 
     ].join('\n');
 

@@ -5,7 +5,7 @@ var express = require('express'),
     app = express();
 
 app.use(express.bodyParser());
-
+app.set('title', 'Jenius');
 app.get('/api/schema_form/awesomeThings', routes.schema_form.awesomeThings);
 
 app.use(function(req, res) {

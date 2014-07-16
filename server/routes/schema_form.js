@@ -86,64 +86,9 @@ exports.getJeniusForm = function(req, res) {
                 res.json({
                     results: schema_form,
                     error: err
-                    // lastQuery: finalQuery,
-                    // firstQuery: query,
-                    // origResults: results
                 });
             });
         });
-
-
-
-
-
-
-
-        /*
-
-        console.log(JSON.stringify(results));
-        var objectArray = [];
-
-        for (var i = 0; i < results.length; i++) {
-            for (var p = 0; p < results[i].formObjectProperties.length; p++) {
-                console.log(JSON.stringify(results[i].formObjectProperties[p]));
-                var boundValue = utils.getBoundPropertyNoVariable(results[i].formObjectProperties[p]);
-                results[i].formObject.properties.push(boundValue);
-            }
-            var formObject = [
-                '{form_id:' + results[i].formObject.formId + ',',
-                'isEmpty:false,',
-                'isNew:true,',
-                'editType:"singleEdit",',
-                'node_label:"' + results[i].formObject.node_label + '",',
-                'variableName:"' + results[i].formObject.variableName + '",',
-                'properties:{' + results[i].formObject.properties.join(',') + '}}'
-            ].join('\n');
-            objectArray.push(formObject);
-
-        }
-
-
-
-        var finalQuery = [
-            utils.checkForNew(null),
-            'RETURN [',
-            objectArray.join(', \n'),
-            '] as `formObject`'
-        ].join('\n');
-        console.log(finalQuery);
-        // var finalQuery = finalFirstQuery; //+ propertyArray.join('\n ,');
-        dbCtrl.db.query(finalQuery, params, function(err, finResults) {
-
-            res.json({
-                results: finResults[0],
-                error: err,
-                lastQuery: finalQuery,
-                firstQuery: query,
-                origResults: results
-            });
-        });
-		*/
     });
 };
 
@@ -163,7 +108,6 @@ var setFormObjs = function(formObjs, key) {
 };
 
 var evaluateFormObject = function(formObjs, startNodes) {
-
     var stagingPayload = {
         startNodes: '',
         returnProperties: [],
