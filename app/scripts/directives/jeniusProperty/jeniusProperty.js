@@ -4,7 +4,7 @@ angular.module('jeniusApp')
             templateUrl: '/scripts/directives/jeniusProperty/jeniusProperty.html',
             //restrict: 'A',
             scope: {
-                jp: "=jeniusProperty",
+                jp: "=jeniusProperty"
             },
             link: function(scope, element, attr) {
                 /*
@@ -14,7 +14,8 @@ angular.module('jeniusApp')
                  * form.editType
                  * form.formReady
                  */
-
+                //   var scope.debugEnabled = CommonServices.debugEnabled();
+                // var scope.serverUrl = CommonServices.serverUrl();
                 /**
                  *
                  * Variables for the Object Form are located here
@@ -28,16 +29,16 @@ angular.module('jeniusApp')
                  * Functions for the object form are located here
                  *
                  **/
+                //scope.arrayToString = function()
 
-
-                /**
+                /*
                  *
                  * Watchers are located here
                  *
                  **/
 
                 scope.$watch('jp', function(newValue, oldValue) {
-                    console.log(newValue);
+                    //   console.log(newValue);
                     if (newValue === true) {
 
                     };

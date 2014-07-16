@@ -5,10 +5,14 @@ angular.module('jeniusApp')
         //  $scope.selectedObject = {};
         // $scope.selectedObject.isEmpty = true;
         // $scope.selectedObject.properties = {};
-
+        $scope.selectedFormObject = null;
         $scope.schemaNodeList = {
             nodeLabel: 'Schema_Node',
             fieldKey: 'label_name'
+        };
+        $scope.schemaFormList = {
+            nodeLabel: 'Schema_Form',
+            fieldKey: 'form_name'
         };
         $scope.testNodeList = angular.copy($scope.schemaNodeList);
         $scope.srcRelNodeList = angular.copy($scope.schemaNodeList);
@@ -23,6 +27,10 @@ angular.module('jeniusApp')
             nodeLabel: 'Schema_Relationship',
             fieldKey: 'relationship_type'
         };
+        var test1 = {
+            form_name: 'test1'
+        };
+
 
         $scope.resetTestRelationship = function() {};
         $scope.submitTestRelationship = function() {
@@ -263,6 +271,21 @@ angular.module('jeniusApp')
                 CommonServices.getJeniusObjectForm(payload)
                     .success(function(data) {
                         $scope.tgtFieldKeys = angular.copy(data.results);
+                    });
+            };
+
+        });
+
+        $scope.$watch('schemaFormList.selectedNode', function(newValue, oldValue) {
+            if (typeof newValue == 'object') {
+                console.log(newValue);
+                var payload = {
+                    form_name: newValue.nodeName
+                };
+                CommonServices.getJeniusForm(payload)
+                    .success(function(data) {
+                        console.log(data);
+                        $scope.selectedFormObject = data.results;
                     });
             };
 

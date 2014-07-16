@@ -27,6 +27,7 @@ app.post('/api/getSchemaNodeProperties', routes.schema_node.getSchemaNodePropert
 
 //Common Api
 
+app.post('/api/getJeniusForm', routes.schema_form.getJeniusForm);
 app.post('/api/getJeniusList', routes.common_api.getJeniusList);
 app.post('/api/getJeniusObjectForm', routes.common_api.getJeniusObjectForm);
 app.post('/api/submitGroupRequest', routes.common_api.submitGroupRequest);

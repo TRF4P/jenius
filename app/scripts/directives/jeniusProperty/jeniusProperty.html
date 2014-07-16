@@ -1,4 +1,6 @@
 <div id="jeniusProperty">
+	<a href="http://localhost:7474/webadmin/#/data/search/{{jp.node_id}}/" target="_blank">
+		<span class="glyphicon glyphicon-cog"></span></a>
 	<div ng-if="jp.data_type=='text' && jp.has_multiple_values===false">
 		<input class="form-control" 
 		type="text" 
@@ -17,6 +19,14 @@
 		type="number" 
 		ng-model="jp.changed_value"
 		ng-change="">
+	</div>
+
+	<div ng-if="jp.data_type=='text-array'">
+		<textarea class="form-control" 
+		ng-model="jp.changed_value" 
+		rows="3"
+		ng-change="jp.changed_value=jp.changed_value.split(',')"
+		></textarea>
 	</div>
 
 	<span ng-if="jp.data_type=='boolean'">

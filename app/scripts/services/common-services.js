@@ -15,6 +15,17 @@ angular.module('jeniusApp')
                 };
                 return crObj;
             },
+            getEditRequestObject: function(property) {
+                var editObj = {
+                    editObj: {
+                        variableName: property.node_label.toLowerCase() + '_' + property.node_id,
+                        variableId: property.node_id
+                    },
+                    property: property
+                };
+                editObj.property.variableName = editObj.editObj.variableName;
+                return editObj;
+            },
             getRelRequestObject: function() {
                 var crObj = {
                     relationship_type: null,
@@ -145,6 +156,21 @@ angular.module('jeniusApp')
                     })
                     .error(function(data) {
                         console.log("******Error getting SChema Node List*****");
+                        console.log(data);
+                    });
+            },
+            getJeniusForm: function(payload) {
+                return $http({
+                    method: "POST",
+                    url: '/api/getJeniusForm',
+                    data: payload
+                })
+                    .success(function(data) {
+                        console.log("*******Got Schema Form******");
+                        // console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log("******Error Getting Schema Form*****");
                         console.log(data);
                     });
             },

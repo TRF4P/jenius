@@ -1,21 +1,6 @@
-var jsonToCypherString = function(jsonObj) {
-    var objKeys = Object.keys(jsonObj);
-    var bodyString = [];
-    for (var i = 0; i < objKeys.length; i++) {
-        bodyString.push(objKeys[i] + ':' + cis(jsonObj[objKeys[i]]));
-    }
+var utils = require('./jenius_utils.js');
 
-    return '{' + bodyString.join(',') + '}';
-};
 
-getRelReq = function(prop) {
-    cypherString = ['{request_status:0',
-        'request_date:timestamp()',
-        'last_modified:timestamp()',
-        'relationship_type:"' + prop.relationship_type + '"}'
-    ].join(', \n');
-    return cypherString;
-};
 
 exports.setExistingVariable = function(varObj) {
     var cypherString = varObj.variableName +
@@ -24,11 +9,13 @@ exports.setExistingVariable = function(varObj) {
     return cypherString;
 };
 
+
+
 exports.reqCreateNode = function(createObj) {
     var cypherString = [
-        'CREATE (groupReq)-[:create_request]->(' + createObj.variableName + '_createReq:Create_Request ' + getCreateReq(createObj) + ')',
+        'CREATE (groupReq)-[:create_request]->(' + createObj.variableName + '_createReq:Create_Request ' + utils.getCreateReq(createObj) + ')',
         '-[:requested_create_node]->',
-        '(' + createObj.variableName + ':Pending_Node' + jsonToCypherString(createObj.properties) + ')'
+        '(' + createObj.variableName + ':Pending_Node' + utils.jsonToCypherString(createObj.properties) + ')'
     ].join('');
 
     return cypherString;
@@ -61,7 +48,7 @@ exports.reqCreateRelationship = function(relObj) {
         ' CREATE (groupReq)-[:relationship_request]->(' +
         relObj.srcObj.variableName + '_' +
         relObj.tgtObj.variableName +
-        '_relReq:Relationship_Request' + getRelReq(relObj) + ')',
+        '_relReq:Relationship_Request' + utils.getRelReq(relObj) + ')',
         'CREATE (' + relObj.srcObj.variableName + ')<-[:requested_relationship_source]-',
         '(' + relObj.srcObj.variableName + '_' +
         relObj.tgtObj.variableName +
@@ -89,7 +76,7 @@ exports.reqPropertyEdit = function(propObj) {
     console.log(propObj);
     var cypherString = [
         'CREATE (groupReq)-[:edit_request]->(edit_request_' + propObj.property_name + '_' + propObj.node_id + ':Edit_Request',
-        getEditReq(propObj),
+        utils.getEditReq(propObj),
         ')-[:requested_edit]->(', propObj.variableName, ')',
     ].join('');
     /*
@@ -117,7 +104,7 @@ exports.approvePropertyEdit = function(propObj) {
     returnObj.set = [
         'SET ' + propObj.reqObj.variableName + '.request_status=1',
         'SET ' + propObj.reqObj.variableName + '.last_modified=timestamp()',
-        'SET ' + propObj.modifiedObj.variableName + '.' + propObj.node_key + '=' + cis(propObj.new_value),
+        'SET ' + propObj.modifiedObj.variableName + '.' + propObj.node_key + '=' + utils.cis(propObj.new_value),
     ].join('\n');
     return returnObj;
 };
@@ -137,38 +124,3 @@ exports.getGroupReq = function() {
     ].join(', \n');
     return cypherString;
 };
-
-
-getCreateReq = function(createObj) {
-    cypherString = ['{request_status:0',
-        'request_date:timestamp()',
-        'last_modified:timestamp()',
-        'node_label:"' + createObj.node_label + '"}'
-    ].join(', \n');
-    return cypherString;
-};
-
-
-getEditReq = function(propObj) {
-    cypherString = ['{request_status:0',
-        'request_date:timestamp()',
-        'last_modified:timestamp()',
-        'node_label:"' + propObj.node_label + '"',
-        'node_key:"' + propObj.property_name + '"',
-        'old_value:"' + propObj.property_value + '"',
-        'new_value:' + cis(propObj.changed_value) + '',
-        'data_type:"' + propObj.data_type + '"',
-        'edit_comment:"' + propObj.edit_comment + '"}'
-    ].join(', \n');
-    return cypherString;
-};
-//Check if String (CIS)
-cis = function(value) {
-    if (isNaN(value) === true) {
-        return '"' + value + '"';
-    } else {
-        return value;
-    };
-};
-
-//create (g:Group_Request

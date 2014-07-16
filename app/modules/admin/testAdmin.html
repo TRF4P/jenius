@@ -104,20 +104,20 @@
 			<div class="row">
 					<div class="col-md-4">
 							<div jenius-list="srcTestList"></div>
+							<select class="form-control" 
+							ng-model="srcObjectList.fieldKey" 
+							ng-options="field.property_name as field.display_name for (key,field) in srcFieldKeys"><option>--Select Field Name--</option></select>
 							<div jenius-list="srcObjectList"></div>
-					<select class="form-control" 
-					ng-model="srcObjectList.fieldKey" 
-					ng-options="field.property_name as field.display_name for (key,field) in srcFieldKeys"><option>--Select Field Name--</option></select>
 						</div>
 					<div class="col-md-4">
 						<div jenius-list="relList"></div>
 						</div>
 				 	<div class="col-md-4">
 							<div jenius-list="tgtTestList"></div>
-							<div jenius-list="tgtObjectList"></div>
 					<select class="form-control" 
 					ng-model="tgtObjectList.fieldKey" 
 					ng-options="field.property_name as field.display_name for (key,field) in tgtFieldKeys"><option>--Select Field Name--</option></select>
+							<div jenius-list="tgtObjectList"></div>
 						</div>
 					</div>
 				</div>
@@ -126,7 +126,11 @@
 
 	<div class="row" ng-show="selectedTab=='schemaFormTab'">
 		<div class="col-md-4">
-			<h3>Create Schema Form</h3>
+			<h3>Select Schema Form</h3>
+			<div jenius-list="schemaFormList"></div>
+		</div>
+		<div ng-if="selectedFormObject!==null" class="col-md-4" ng-repeat="formObject in selectedFormObject.formObject">
+			<div jenius-object-form="formObject"></div>
 		</div>
 	</div>
 

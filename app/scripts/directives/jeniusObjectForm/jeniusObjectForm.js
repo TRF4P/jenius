@@ -4,7 +4,7 @@ angular.module('jeniusApp')
             templateUrl: '/scripts/directives/jeniusObjectForm/jeniusObjectForm.html',
             //restrict: 'A',
             scope: {
-                jof: "=jeniusObjectForm",
+                jof: "=jeniusObjectForm"
             },
             link: function(scope, element, attr) {
                 /*
@@ -61,7 +61,13 @@ angular.module('jeniusApp')
                     var isReady = JeniusCrud.reviewCreate(scope.jof.properties);
 
                     if (isReady === true) {
+                        JeniusCrud.submitCreateRequest(scope.jof)
+                            .success(function(data) {
+                                scope.createId = data.results.request.groupId;
+                                scope.createReady = true;
+                            });
                         //cr means create request
+                        /*
                         var gr = CommonServices.getGroupRequestObject();
                         var cr = CommonServices.getCreateRequestObject();
                         cr.variableName = 'new_' + scope.jof.node_label.toLowerCase();
@@ -77,10 +83,10 @@ angular.module('jeniusApp')
                         CommonServices.submitGroupRequest(gr)
                             .success(function(data) {
                                 console.log(data);
-                                scope.createId = data.results.request.groupId;
-                                scope.createReady = true;
+                                
 
                             });
+                        */
                     } else {
                         alert("Fields still need added");
 
@@ -100,34 +106,19 @@ angular.module('jeniusApp')
 
                 };
                 scope.denyCreateRequest = function() {};
-                scope.submitPropertyChange = function(property) {
-                    groupRequest = CommonServices.getGroupRequestObject();
-                    var editVar = {};
-                    editVar.variableName = property.node_label.toLowerCase() + '_' + property.node_id;
-                    property.variableName = editVar.variableName;
-                    editVar.variableId = property.node_id;
-                    groupRequest.variables.push(editVar);
-                    groupRequest.editProperties.push(property);
-                    console.log(groupRequest);
-                    CommonServices.submitGroupRequest(groupRequest)
-                        .success(function(data) {
-                            console.log(data);
-                            property.reqId = data.results.request.groupId;
 
+                scope.submitPropertyChange = function(scopeProperty) {
+                    JeniusCrud.submitPropertyChange(scopeProperty)
+                        .success(function(data) {
+                            console.log(scopeProperty);
                         });
-                    property.submitSuccess = true;
                 };
 
                 scope.approvePropertyChange = function(property) {
-                    console.log(property);
-                    var payload = {};
-                    payload.groupId = property.reqId;
-                    CommonServices.approveGroupRequest(payload)
+                    JeniusCrud.approvePropertyChange(property)
                         .success(function(data) {
-                            console.log(data);
-                            property.property_value = property.changed_value;
+                            console.log(property);
                         });
-                    delete property.submitSuccess;
                 };
 
                 scope.denyPropertyChange = function(property) {

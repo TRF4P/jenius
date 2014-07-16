@@ -16,13 +16,22 @@ angular.module('jeniusApp')
                 };
 
                 scope.$watch('jeniusList.nodeLabel', function(newValue, oldValue) {
-                    if (newValue !== null) {
-                        scope.queryDb();
+                    console.log(newValue);
+                    if (newValue !== null && typeof newValue !== 'undefined') {
+                        scope.queryDbNoLocal();
                     };
                 });
                 scope.refreshList = function() {
                     scope.jeniusList.selectedNode = null;
-                    scope.queryDb();
+                    scope.queryDbNoLocal();
+                };
+
+                scope.queryDbNoLocal = function() {
+                    if (('localList' in scope.jeniusList) && scope.jeniusList.localList === true) {
+
+                    } else {
+                        scope.queryDb();
+                    }
                 };
             }
         };

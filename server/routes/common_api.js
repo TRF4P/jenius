@@ -2,15 +2,8 @@
 
 var dbCtrl = require('./dbCtrl.js');
 var crud = require('./crud.js');
+var utils = require('./jenius_utils.js');
 
-var checkForNew = function(isNew) {
-    if (isNew === null) {
-        return ' MATCH (n:Root_Node) ';
-        params.nodeId = dbCtrl.rootId;
-    } else {
-        return ' START n=node(' + isNew + ') ';
-    };
-}
 
 var checkForValue = function(theArray) {
     if (theArray.length > 0) {
@@ -62,19 +55,7 @@ exports.getJeniusObjectForm = function(req, res) {
     var query = [
         'MATCH (n)-[r:approved_property]->(p:Schema_Property)',
         'WHERE n.label_name="' + params.nodeType + '"',
-        'RETURN collect(distinct{',
-        '			property_name:p.property_name,',
-        '			display_name:p.display_name,',
-        '			is_edittable:p.is_edittable,',
-        '			mandatory_field:p.mandatory_field,',
-        '			has_multiple_values:p.has_multiple_values,',
-        '			select_options:p.select_options,',
-        '			priority:p.priority,',
-        '           node_label:"' + params.nodeType + '",',
-        '			data_type:p.data_type,',
-        '			default_value:p.default_value,',
-        '			property_value:"n."+p.property_name',
-        ' }) as objectForm'
+        'RETURN collect(distinct ' + utils.getEmptyProperty(params.nodeType) + ' ) as objectForm'
     ].join('\n');
     //  console.log(query);
     var objectResults = {};
@@ -85,26 +66,13 @@ exports.getJeniusObjectForm = function(req, res) {
         objectResults = results[0].objectForm;
         var propertyArray = [];
         for (var i = 0; i < objectResults.length; i++) {
-            var value = objectResults[i];
-            var property = [
-                '{property_name:"' + value.property_name + '",',
-                'node_id:ID(n),',
-                'node_label:"' + value.node_label + '",',
-                'display_name:"' + value.display_name + '",',
-                'is_edittable:' + value.is_edittable + ',',
-                'mandatory_field:' + value.mandatory_field + ',',
-                'has_multiple_values:' + value.has_multiple_values + ',',
-                'select_options:' + JSON.stringify(value.select_options) + ',',
-                'priority:' + value.priority + ',',
-                'data_type:"' + value.data_type + '",',
-                'default_value:' + value.default_value + ',',
-                'property_value:' + value.property_value + '',
-            ].join('\n') + '} as `' + value.property_name + '`';
-            propertyArray.push(property);
+            propertyArray.push(
+                utils.getBoundProperty(objectResults[i])
+            );
         }
 
         var finalFirstQuery = [
-            checkForNew(params.nodeId),
+            utils.checkForNew(params.nodeId),
             'RETURN '
         ].join('\n');
 
@@ -166,6 +134,7 @@ exports.submitGroupRequest = function(req, res) {
         newRelationships.join(' \n ') +
         editProperties.join(" \n ") +
         '\n RETURN {groupId:ID(groupReq)} as `request`';
+    console.log(query);
     dbCtrl.db.query(query, function(err, results) {
         res.json({
             results: results[0],
@@ -330,10 +299,3 @@ exports.denyGroupRequest = function(req, res) {
 
 
 };
-
-
-
-var testObj = {};
-testObj.body = {};
-testObj.body.nodeId = 14;
-//exports.getJeniusObjectForm(testObj);

@@ -40,6 +40,9 @@
 			  	ng-click="denyPropertyChange(prop)" 
 			  	type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span></button>
 			</div>
+			  <a href="http://localhost:7474/webadmin/#/data/search/{{prop.reqId}}/" 
+			  target="_blank"
+			  ng-show="prop.submitSuccess===true"><span class="glyphicon glyphicon-cog"></span></a>
 	    </div>
 	    </div>
 	  </div>
