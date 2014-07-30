@@ -5,6 +5,7 @@ angular.module('jeniusApp', [
     'ngResource',
     'ngSanitize',
     'ngRoute',
+    'ui.filters',
     'ui.select2',
     'ngTagsInput'
 

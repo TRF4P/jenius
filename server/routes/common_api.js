@@ -16,16 +16,17 @@ var checkForValue = function(theArray) {
 exports.getJeniusList = function(req, res) {
     var params = {};
     params.nodeLabel = req.body.nodeLabel;
-    params.fieldKey = +"n." + req.body.fieldKey;
-    /*
+    params.fieldKey = req.body.fieldKey;
+
     var query = [
         'MATCH (n:' + params.nodeLabel + ')',
         'RETURN collect({',
         'nodeId:ID(n),',
+        'submitObj:{variableName:lower(head(labels(n)))+"_"+ID(n),variableId:ID(n)},',
         'nodeLabel:head(labels(n)),',
         'nodeName:n.' + params.fieldKey + '}) as `nodeList`'
-].join('\n');
-*/
+    ].join('\n');
+    /*
     var query = [
         'MATCH (n:{nodeLabel})',
         'RETURN collect({',
@@ -34,7 +35,7 @@ exports.getJeniusList = function(req, res) {
         'nodeName:{fieldKey}}) as `nodeList`'
 
     ].join('\n');
-
+*/
 
     dbCtrl.db.query(query, params, function(err, results) {
 
@@ -57,6 +58,15 @@ exports.getJeniusObjectForm = function(req, res) {
 
     var params = {};
     params = req.body;
+
+    var submitObj = {
+        variableName: params.nodeType.toLowerCase() + '_' + params.nodeId,
+        variableId: params.nodeId
+    };
+    if (params.nodeId === null) {
+        submitObj.variableName = 'new_' + params.nodeType.toLowerCase()
+
+    }
     //  if (params.nodeId === null) {
     //      params.nodeId = dbCtrl.rootId;
     //  };
@@ -79,6 +89,8 @@ exports.getJeniusObjectForm = function(req, res) {
             );
         }
 
+
+
         var finalFirstQuery = [
             utils.checkForNew(params.nodeId),
             'RETURN '
@@ -89,6 +101,7 @@ exports.getJeniusObjectForm = function(req, res) {
         dbCtrl.db.query(finalQuery, function(err, finResults) {
             res.json({
                 results: finResults[0],
+                submitObj: submitObj,
                 error: err,
                 query: finalQuery
             });
